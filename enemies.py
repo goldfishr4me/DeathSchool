@@ -1,5 +1,5 @@
 #Enemy
-class Enemy:
+class Enemy(object):
     """base class for all enemies"""
     def __init__(self, name, lifepoints, damage):
         self.name = name
@@ -10,17 +10,17 @@ class Enemy:
         return self.lifepoints > 0
 class Guilt(Enemy):
     def __init__(self):
-        super().__init__(name="Guilt", lifepoints = 10, damage = 3)
+        super(self, Guilt).__init__(name="Guilt", lifepoints = 10, damage = 3)
 class Homework(Enemy):
     def __init__(self):
-        super().__init__(name="Homework", lifepoints=5, damage=2)
+        super(self ,Guilt).__init__(name="Homework", lifepoints=5, damage=2)
  
  
 class ResearchPaper(Enemy):
     def __init__(self):
-        super().__init__(name="Research Paper", lifepoints=30, damage=15)
+        super(self, Guilt).__init__(name="Research Paper", lifepoints=30, damage=15)
 
 #boss 
 class Procrastination(Enemy):
     def __init__(self):
-        super().__init__(name="Procrastination", lifepoints=50, damage=20)
+        super(self, Guilt).__init__(name="Procrastination", lifepoints=50, damage=20)
