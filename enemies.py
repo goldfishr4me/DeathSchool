@@ -8,19 +8,21 @@ class Enemy(object):
  
     def is_alive(self):
         return self.lifepoints > 0
+
 class Guilt(Enemy):
     def __init__(self):
-        super(self, Guilt).__init__(name="Guilt", lifepoints = 10, damage = 3)
+        super(Guilt, self).__init__(name="Guilt", lifepoints = 10, damage = 2)
+        
 class Homework(Enemy):
     def __init__(self):
-        super(self ,Guilt).__init__(name="Homework", lifepoints=5, damage=2)
+        super(Homework, self).__init__(name="Homework assignment", lifepoints=100, damage=2)
  
  
 class ResearchPaper(Enemy):
     def __init__(self):
-        super(self, Guilt).__init__(name="Research Paper", lifepoints=30, damage=15)
+        super(ResearchPaper, self).__init__(name="Research Paper", lifepoints=30, damage=10)
 
 #boss 
 class Procrastination(Enemy):
     def __init__(self):
-        super(self, Guilt).__init__(name="Procrastination", lifepoints=50, damage=20)
+        super(Procrastination, self).__init__(name="Procrastination", lifepoints=80, damage=15)

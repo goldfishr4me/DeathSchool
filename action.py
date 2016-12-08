@@ -1,32 +1,44 @@
 import game   
+from player import Player
+import world
 
-            
+
+                
 def get_player_command():
     """the player input"""
     return raw_input('Action: ').lower().strip()
 
-def play():
-    """Main Game Script"""
 
-print("Alarm Rings on Syllabus Day!")
-print("Is going to class really necessary?")
-print("Go back to sleep? Y or N")
-action_input = get_player_command()
-backpack = [game.Pencil(),game.Ruler(),game.Gold(5), 'paper wads']
-#while True:
-    #action_input = raw_input("Y or N").lower().strip()
-    #if not 'y' or 'n' :
-        #print("invalid input")
-        #continue
-    #else:
-         #break
-if action_input == 'y':
-    print ('...zzzzz')
-    
-if action_input == 'n':
-    print("You're Still probably going to be five minutes late")
 
-elif action_input == 'b':
-    print ("****Backpack contents****")
-    for item in backpack:
-        print(str(item))
+
+### Main Script
+print("++++++++++++++++++++++++++++++++++")
+print("|      DEATHSCHOOL!!!!           |")
+print("|           By: Cori Sparks      |")
+print("++++++++++++++++++++++++++++++++++\n\n\n")
+print("You walk up the stairs on the first day of school.\n Something doesn't feel right......\n The parking lot was full, but building is eerily silent.\n")
+player = Player()
+
+while True:
+    room = world.tile_at(player.x, player.y)
+    print(room.intro_text())
+    room.modify_player(player)
+    action_input = get_player_command()
+    if action_input == 'w':
+        player.move_forward()
+    elif action_input == 's':
+        player.move_backward()
+    elif action_input == 'a':
+        player.move_left()
+    elif action_input == 'd':
+        player.move_right()
+    elif action_input == 'b':
+        player.print_pack()
+    elif action_input == 'f':
+        player.attack()
+    elif action_input == 'q':
+        break
+    else:
+        print("Invalid!")
+        
+        

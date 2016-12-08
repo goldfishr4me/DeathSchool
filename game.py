@@ -9,11 +9,11 @@ class Item(object):
         return "\n\n{}\n-----\n{}\nValue: {}\n".format(self.name, self.description, self.value)
 #Given Items
 
-class Gold(Item):
+class Money(Item):                        
     """Currency"""
     def __init__(self, amt):
         self.amt = amt
-        super(Gold, self).__init__(name="Gold",
+        super(Money, self).__init__(name="Money",
         description="A Paper Bill with {} stamped on the front.".format(str(self.amt)),
         value=self.amt)
         
@@ -40,7 +40,7 @@ class Ruler(Weapon):
                          damage=5)
 #first aid
 class Coffee(Item):
-    def __init__(self,restore):
+    def __init__(self):
         self.restore = restore
-        super(self, Coffee). __init__(name="Coffee!", description="Restores 10 lifepoints", value = 5, restore = 10)
+        super(Coffee, self). __init__(name="Coffee!", description="Restores 10 lifepoints", value = 5, restore = 10)
     
