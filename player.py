@@ -11,6 +11,7 @@ class Player(object):
         self.x =1
         self.y =2
         self.lifepoints =100
+        self.Money = 5
         
     def move(self, dx, dy):
         self.x += dx
@@ -78,6 +79,10 @@ class Player(object):
                     valid = True
                 except (ValueError, IndexError):
                     print("Invalid choice, try again.")
+
+    def trade(self):
+        room = world.tile_at(self.x, self.y)
+        room.check_if_trade(self)
                     
             
         
