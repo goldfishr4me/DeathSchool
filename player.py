@@ -7,7 +7,7 @@ class Player(object):
         self.backpack = [game.Pencil(),
                          game.Ruler(),
                          game.Money(5),
-                         'paper wads']
+                         game.Coffee()]
         self.x =1
         self.y =2
         self.lifepoints =100
@@ -51,16 +51,33 @@ class Player(object):
         best_weapon = self.most_powerful_weapon()
         room = world.tile_at(self.x,self.y)
         enemy = room.enemy
-        print("You use the {} against {}!".format(best_weapon.name, enemy.name))
+        print("\nYou use the {} against {}!".format(best_weapon.name, enemy.name))
         enemy.lifepoints -= best_weapon.damage
         if not enemy.is_alive():
-            print("You Killed the {}!" .format(enemy.name))
+            print("\nYou Killed the {}!" .format(enemy.name))
         else:
-            print ("{}'s Life Points are {}." .format(enemy.name, enemy.lifepoints))
-            
-    def modify_player(self, player):
-        if self.enemy.is_alive():
-            player.lifepoints = player.lifepoints - self.enemy.damage
-            print ("Enemy does {} damage. You Have {} Life Points remaining.".format(self.enemy.damage,player.lifepoints))
+            print ("\n{}'s Life Points are {}." .format(enemy.name, enemy.lifepoints))
+
+    def heal(self):
+        consumables = [item for item in self.backpack if isinstance( item,game.Consumable)]
+        if not consumables:
+            print ("\nYou don't have any items to heal you!")
+            return
+
+        for i, item in enumerate(consumables,1):
+            print("Choose an item to restore Life Points: ")
+            print("{}. {}".format(i,item))
+            valid = False
+            while not valid:
+                choice = raw_input("")
+                try:
+                    to_eat = consumables[int(choice) -1]
+                    self.lifepoints = min(100, self.lifepoints + to_eat.healing_value)
+                    self.backpack.remove(to_eat)
+                    print("Current Life Points {}".format(self.lifepoints))
+                    valid = True
+                except (ValueError, IndexError):
+                    print("Invalid choice, try again.")
+                    
             
         
