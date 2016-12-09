@@ -6,7 +6,7 @@ import player
 class MapTile(object):
     def __init__(self, x, y):
         self.x = 1
-        self.y = 1
+        self.y = 2
 
     def intro_text(self):
         raise NotImplementedError("Create a subclass instread!")
@@ -34,20 +34,20 @@ class EnemyTile(MapTile):
         r = random.random()
         if r < 0.50:
             self.enemy = enemies.Guilt()
-            self.alive_text = "You skipped class AGAIN!?\nPrepare to be eaten by GUILT!!"
-            self.dead_text = "You decide to go to class anyway.\nBetter late than never:)" 
+            self.alive_text = "\nYou skipped class AGAIN!?\nPrepare to be eaten by GUILT!!"
+            self.dead_text = "\nYou decide to go to class anyway.\nBetter late than never:)" 
         elif r < 0.80:
             self.enemy = enemies.ResearchPaper()
-            self.alive_text = "A Rabid Research paper stands before you!!\nDid you cite your sources!?\nPrepare to be expelled for plagarism!!"
-            self.dead_text = "The Research Paper rips down the middle and falls at your feet" 
+            self.alive_text = "\nA Rabid Research paper stands before you!!\nDid you cite your sources!?\nPrepare to be expelled for plagarism!!"
+            self.dead_text = "\nThe Research Paper rips down the middle and falls at your feet" 
         elif r < 0.95:
             self.enemy = enemies.Homework()
-            self.alive_text = "A ornary Homework Assignment is blocking your way.\nYou thought Homework was supposed to be done at home...\nHomework follows you EVERYWHERE!!"
-            self.dead_text = "You know the answers and showed that homework who's boss" 
+            self.alive_text = "\nAn ornary Homework Assignment is blocking your way.\nYou thought Homework was supposed to be done at home...\nHomework follows you EVERYWHERE!!"
+            self.dead_text = "\nYou know the answers and showed that homework who's boss" 
         else:
             self.enemy = enemies.Procrastination()
-            self.alive_text = "There is nothing left to defeat, but the embodiement of PROCRASTINATION!!!\nYou can defeat your homework and a research paper... \nbut can you defeat your own bad habits?"
-            self.dead_text = "Lucky for you, you do your best work under pressure."
+            self.alive_text = "\nIts the embodiement of PROCRASTINATION!!!\nYou can defeat your homework and a research paper... \nbut can you defeat your own bad habits?"
+            self.dead_text = "\nLucky for you, you do your best work under pressure."
             
         super(EnemyTile, self).__init__(x,y)
         
@@ -55,6 +55,11 @@ class EnemyTile(MapTile):
         if self.enemy.is_alive():
             text = self.alive_text if self.enemy.is_alive() else self.dead_text
             return text
+        
+    def modify_player(self, player):
+        if self.enemy.is_alive():
+            player.lifepoints = player.lifepoints - self.enemy.damage
+            print ("\nEnemy does {} damage. You Have {} Life Points remaining.".format(self.enemy.damage,player.lifepoints))
        
         
 world_map = [
