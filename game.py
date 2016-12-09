@@ -38,9 +38,20 @@ class Ruler(Weapon):
                          description="A metal Ruler with cork backing. Can come in handy for measurements or self defense.",
                          value=5,
                          damage=5)
-#first aid
-class Coffee(Item):
+#consumables
+class Consumable(object):
+    def __init__(self, name, description, value,healing_value):
+       
+        self.name = name
+        self.description = description
+        self.value = value
+        self.healing_value = healing_value
+ 
+    def __str__(self):
+        return "\n\n{}\n-----\n{}\nValue: {}\n".format(self.name, self.description, self.value, self.healing_value)
+
+class Coffee(Consumable):
     def __init__(self):
-        self.restore = restore
-        super(Coffee, self). __init__(name="Coffee!", description="Restores 10 lifepoints", value = 5, restore = 10)
-    
+       super(Coffee, self).__init__(name="Coffee",
+        description="Just what you needed!",
+        value=5,healing_value = 10)
