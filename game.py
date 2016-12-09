@@ -38,6 +38,14 @@ class Ruler(Weapon):
                          description="A metal Ruler with cork backing. Can come in handy for measurements or self defense.",
                          value=5,
                          damage=5)
+        
+class FlashDrive(Weapon):
+    def __init__(self):
+        super(FlashDrive, self).__init__(name="Flash Drive",
+                         description="Capable of delivering a powerful shock to your adversaries!",
+                         value=100,
+                         damage=20)
+        
 #consumables
 class Consumable(object):
     def __init__(self, name, description, value,healing_value):
@@ -53,5 +61,19 @@ class Consumable(object):
 class Coffee(Consumable):
     def __init__(self):
        super(Coffee, self).__init__(name="Coffee",
-        description="Just what you needed!",
+        description="Just what you needed! 10 life points",
         value=5,healing_value = 10)
+
+class Bagel(Consumable):
+    def __init__(self):
+       super(Bagel, self).__init__(name="Bagel",
+        description="Multigrain goodness to start the day off right! 60 life points",
+        value=10,healing_value = 60)
+
+class Ramen(Consumable):
+    def __init__(self):
+       super(Ramen, self).__init__(name="Ramen",
+        description="Enough sodium for the next two days! 100 life points",
+        value=20,healing_value = 100)
+
+
