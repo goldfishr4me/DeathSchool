@@ -6,12 +6,15 @@ class Player(object):
     def __init__(self):
         self.backpack = [game.Pencil(),
                          game.Ruler(),
-                         game.Money(5),
                          game.Coffee()]
-        self.x =1
-        self.y =2
+        self.x = 2
+        self.y = 3
         self.lifepoints =100
         self.Money = 5
+        self.victory = False
+
+    def is_alive(self):
+        return self.lifepoints > 0
         
     def move(self, dx, dy):
         self.x += dx
@@ -35,6 +38,7 @@ class Player(object):
         for item in self.backpack:
             print(item)
         print ("\nYour best weapon is your {}\n" .format(best_weapon.name))
+        print ("Money: {}".format(self.Money))
             
     def most_powerful_weapon(self):
         max_damage = 0

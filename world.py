@@ -1,12 +1,25 @@
 import random
 import enemies
 import player
+import npc
 
 ###Title Words
+def tile_exists(x, y):
+    return _world.get((x, y))
+
+def tile_at(x,y):
+    """ Locates the map tile at a coordinate"""
+    if x < 0 or y < 0:
+        return None
+    try:
+        return world_map[y][x]
+    except IndexError:
+        return None    
+            
 class MapTile(object):
     def __init__(self, x, y):
-        self.x = 1
-        self.y = 2
+        self.x = 2
+        self.y = 3
 
     def intro_text(self):
         raise NotImplementedError("Create a subclass instread!")
@@ -23,9 +36,12 @@ class StartTile(MapTile):
 
 class BoringTile (MapTile):
     def intro_text(self):
-        print ("You can't just leave! You have to find out whats going on!")
+        print ("This part of the school is especially borring...")
 
 class VictoryTile(MapTile):
+    def modify_player(self, player):
+        player.victory = True
+        
     def intro_text(self):
         print("You saved the school and all your classmates!!\n Now can you pass your test next week?\n")
 
@@ -50,75 +66,90 @@ class EnemyTile(MapTile):
             self.dead_text = "\nLucky for you, you do your best work under pressure."
             
         super(EnemyTile, self).__init__(x,y)
-        
-    def intro_text(self):
-        if self.enemy.is_alive():
-            text = self.alive_text if self.enemy.is_alive() else self.dead_text
-            return text
-        
+
     def modify_player(self, player):
         if self.enemy.is_alive():
             player.lifepoints = player.lifepoints - self.enemy.damage
             print ("\nEnemy does {} damage. You Have {} Life Points remaining.".format(self.enemy.damage,player.lifepoints))
-       
-        
-world_map = [
-            [None,VictoryTile(1,0),None],
-            [None,EnemyTile(1,1),None],
-            [EnemyTile(0,2), StartTile(1,2), EnemyTile(2,2)],
-            [None, BoringTile(1,3),None]
-            ]
 
-tile_type_dict = {"VT" : VictoryTile,
-                  "EN" : EnemyTile,
-                  "ST": StartTile,
-                  "  ": None}
+    def intro_text(self):
+        if self.enemy.is_alive():
+            return self.alive_text if self.enemy.is_alive() else self.dead_text
+    
+     
+class TraderTile(MapTile):
+    def __init__(self, x, y):
+        self.trader = npc.Trader()
+        super(TraderTile,self).__init__(x,y)
 
-world_dsl = """
-|  |VT|  |
-|  |EN|  |
-|EN|ST|EN|
-|  |EN|  |
-"""
+    def intro_text(self):
+        return ("The Student Center Shop keeper smiles at you cheerfully,\n she doesn't seem to know whats going on in the rest of the school")
 
-def is_dsl_valid(dsl):
-    if dsl.count("|ST|") != 1:
-        return False
-    if dsl.count("|VT") == 0:
-        return False
-    lines = dsl.splitlines()
-    lines = [l for l in lines if l]
-    pipe_counts = [line.count("|") for line in lines]
-    for count in pipe_counts:
-        if count != pipe_counts[0]:
-            return False
+    def check_if_trade(self, player):
+        while True:
+            print ("Would you like to Buy(B), Sell(S), or Exit(X)?")
+            user_input = raw_input().lower().strip()
+            if user_input == 'x':
+                return
+            elif user_input == 'b':
+                print ("Here is what you can buy: ")
+                self.trade(buyer=player, seller=self.trader)
+            elif user_input == 's':
+                print ("Here is what you can sell: ")
+                self.trade(buyer=self.trader, seller=player)
+            else:
+                print ("Invalid Choice!")
+    
+    def swap( self, seller, buyer, item):
+        if item.value > buyer.Money:
+            print("You don't have enough money for that!")
+            return
+        seller.backpack.remove(item)
+        buyer.inventory.append(item)
+        seller.Money = seller.Money + item.value
+        print ("Thank You come again!")
+                                  
+    def trade(self, buyer, seller):
+        for i, item in enumerate(seller.backpack,1):
+            print("{}. {} - {} Money" .format(i,item.name, item.value))
+        while True:
+            user_input = raw_input ("Choose an Item or press X to exit: ").lower().strip()
+            if user_input == 'x':
+                return
+            else:
+                try:
+                    choice = int(user_input)
+                    to_swap = seller.backpack[choice-1]
+                    self.swap(seller, buyer, to_swap)
+                except ValueError:
+                    print("Invalid choice!")
 
-    return True
+  
+class FindGoldTile(MapTile):
+    def __init__(self,x,y):
+        self.Money = random.randint(1,50)
+        self.Money_claimed = False
+        super(FindGoldTile,self).__init__(x,y)
 
-def parse_world_dsl():
-    if not is_dsl_valid(world_dsl):
-        raise SyntaxError ("Dsl is Invalid!")
-
-    dsl_lines = world_dsl.splitlines()
-    dsl_lines = [x for x in dsl_lines if x]
-
-    for y, dsl_row in enumerate(dsl_lines):
-        row = []
-        dsl_cells = dsl_row.split("|")
-        dsl_cells = [c for c in dsl_cells if c]
-        for x, dsl_cells in enumerate(dsl_cells):
-            tile_type = title_type_dict[dsl_cells]
-            row.append(tile_type(x,y) if tile_type else None)
-
-        world_map.append(row)
-
-
-def tile_at(x,y):
-    """ Locates the map tile at a coordinate"""
-    if x < 0 or y < 0:
-        return None
-    try:
-        return world_map[y][x]
-    except IndexError:
-        return None    
+    def modify_player(self, player):
+        if not self.Money_claimed:
+            self.Money_claimed = True
+            player.Money = player.Money + self.Money
+            print("+{} Money added." .format(self.Money))
             
+    def intro_text(self):
+        if self.Money_claimed:
+            return """
+            Another hallway.
+            """
+        else:
+            return """
+            Some one dropped some money here, Lucky you!
+            """
+
+world_map = [[EnemyTile(0,0),EnemyTile(0,1),VictoryTile(0,2),EnemyTile(0,3),EnemyTile(0,4)],
+    [EnemyTile(1,0),BoringTile(1,1),BoringTile(1,2),BoringTile(1,3),EnemyTile(1,4)],
+    [EnemyTile(2,0),FindGoldTile(1,2),EnemyTile(2,2),BoringTile(2,3),TraderTile(2,4)],
+    [TraderTile(3,0),BoringTile(3,1),StartTile(3,2),FindGoldTile(3,3),EnemyTile(3,4)],
+    [FindGoldTile(4,0),BoringTile(4,1),EnemyTile(4,2),BoringTile(4,3),FindGoldTile(4,4)]]
+     
