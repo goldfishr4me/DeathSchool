@@ -36,8 +36,8 @@ class Ruler(Weapon):
     def __init__(self):
         super(Ruler, self).__init__(name="Ruler",
                          description="A metal Ruler with cork backing. Can come in handy for measurements or self defense.",
-                         value=5,
-                         damage=5)
+                         value=10,
+                         damage=20)
         
 class FlashDrive(Weapon):
     def __init__(self):
@@ -62,7 +62,7 @@ class Coffee(Consumable):
     def __init__(self):
        super(Coffee, self).__init__(name="Coffee",
         description="Just what you needed! 10 life points",
-        value=5,healing_value = 10)
+        value=5,healing_value = 20)
 
 class Bagel(Consumable):
     def __init__(self):

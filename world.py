@@ -105,7 +105,7 @@ class TraderTile(MapTile):
             print("You don't have enough money for that!")
             return
         seller.backpack.remove(item)
-        buyer.inventory.append(item)
+        buyer.backpack.append(item)
         seller.Money = seller.Money + item.value
         print ("Thank You come again!")
                                   
